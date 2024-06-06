@@ -68,41 +68,57 @@ function toy(createTime,deliveryTime,sellTime) {
 
 toy(3000, 2000, 1000)
 
-//Toy functional way 2 Async/Await
-// function toytwo(createTime, deliveryTime, sellTime) {
-//     async function createToy() {
-//         setTimeout(() => {
-//             if (true) {
-//                 let type = true
-//                 return type, console.log('Toy was created successfully', sellToy())
-//             } else {
-//                 return console.log('There was a problem while creating the toy');
-//             }
-//         }, createTime);
-//     }
+// Toy functional way 2 Async/Await
+function toytwo(createTime, deliveryTime, sellTime) {
+    function createToy() {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                if (true) {
+                    resolve('Toy was created successfully');
+                } else {
+                    reject('Creation failed');
+                }
+            }, createTime);
+        });
+    }
 
-//     async function deliver() {
-//         setTimeout(() => {
-//             if(true){
-//                 return console.log('Toy was delivered')
-//             }
-//             else{
-//                 return console.log('Toy wasnt delivered');
-//             }
-//         }, deliveryTime)
-//     }
+    function deliver(status) {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                if (status == 'Toy was created successfully') {
+                    resolve('Toy was delivered');
+                } else {
+                    reject('Delivery failed');
+                }
+            }, deliveryTime);
+        });
+    }
 
-//     async function sellToy() {
-//         setTimeout(() => {
-//             if(true){
-//                 return console.log('Toy was sold')
-//             }
-//             else{
-//                 return console.log('Toy wasnt sold');
-//             }
-//         }, sellTime)
-//     }
+    function sellToy(sel_status) {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                if (sel_status == 'Toy was delivered') {
+                    resolve('Toy was sold successfully');
+                } else {
+                    reject('Sale failed');
+                }
+            }, sellTime);
+        });
+    }
 
-// }
+    async function promisify() {
+        try {
+            const status = await createToy();
+            console.log(status);
+            const delivery = await deliver(status);
+            console.log(delivery);
+            const sel_status = await sellToy(delivery);
+            console.log(sel_status);
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
-// toytwo(3000, 2000); 
+    promisify();
+}
+// toytwo(3000, 2000, 1000);
